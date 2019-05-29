@@ -14,8 +14,14 @@ import java.util.Optional;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-
   private static final String LOGIN_VIEW = "/WEB-INF/view/login.jsp";
+
+  private UserService userService;
+
+  @Override
+  public void init() throws ServletException {
+    userService = (UserService) getServletContext().getAttribute("userService");
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,8 +34,7 @@ public class LoginServlet extends HttpServlet {
     String password = req.getParameter("password");
     System.out.println("Trying to login: " + email + " " + password);
 
-    UserService service = (UserService) getServletContext().getAttribute("userService");
-    Optional<User> user = service.login(email, password);
+    Optional<User> user = userService.login(email, password);
     if (!user.isPresent()) {
       doGet(req, resp);
     } else {

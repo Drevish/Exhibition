@@ -11,8 +11,14 @@ import java.io.IOException;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
-
   private static final String REGISTER_VIEW = "/WEB-INF/view/register.jsp";
+
+  private UserService userService;
+
+  @Override
+  public void init() throws ServletException {
+    userService = (UserService) getServletContext().getAttribute("userService");
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,9 +31,7 @@ public class RegisterServlet extends HttpServlet {
     String password = req.getParameter("password");
     System.out.println("Trying to register a new user: " + email + " " + password);
 
-    UserService service = (UserService) getServletContext().getAttribute("userService");
-
-    if (service.register(email, password)) {
+    if (userService.register(email, password)) {
       System.out.println("Registration successful");
       resp.sendRedirect("/login");
     } else {

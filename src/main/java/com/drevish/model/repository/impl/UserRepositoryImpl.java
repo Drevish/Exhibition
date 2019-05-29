@@ -16,6 +16,7 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
   private static final String FIND_ALL_SQL = "SELECT id, email, password, role FROM users";
   private static final String SELECT_BY_EMAIL_SQL = "SELECT id, email, password, role FROM users WHERE email = ?";
+  private static final String SELECT_BY_ID_SQL = "SELECT id, email, password, role FROM users WHERE id = ?";
   private static final String INSERT_USER_SQL = "INSERT INTO users (email, password, role) VALUES (?, ?, ?)";
 
   @Override
@@ -52,6 +53,22 @@ public class UserRepositoryImpl implements UserRepository {
     return Optional.empty();
   }
 
+  @Override
+  public Optional<User> findById(Long id) {
+    try (Connection conn = DBCPDataSource.getConnection()) {
+      PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL);
+      stmt.setLong(1, id);
+      ResultSet rs = stmt.executeQuery();
+
+      if (rs.next()) {
+        return Optional.of(mapResultSetToUser(rs));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return Optional.empty();
+  }
+
   private User mapResultSetToUser(ResultSet rs) throws SQLException {
     return new User(rs.getLong("id"),
             rs.getString("email"),
@@ -60,12 +77,12 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   @Override
-  public void addUser(String email, String password, User.Role role) {
+  public void addUser(User user) {
     try (Connection conn = DBCPDataSource.getConnection()) {
       PreparedStatement stmt = conn.prepareStatement(INSERT_USER_SQL);
-      stmt.setString(1, email);
-      stmt.setString(2, password);
-      stmt.setString(3, role.toString());
+      stmt.setString(1, user.getEmail());
+      stmt.setString(2, user.getPassword());
+      stmt.setString(3, user.getRole().toString());
 
       stmt.execute();
     } catch (SQLException e) {

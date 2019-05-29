@@ -5,6 +5,7 @@ import com.drevish.model.repository.UserRepository;
 import com.drevish.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
@@ -41,8 +42,14 @@ public class UserServiceImpl implements UserService {
     } else {
       // register
       String md5 = DigestUtils.md5Hex(password).toUpperCase();
-      repository.addUser(email, md5, User.Role.USER);
+      User user = new User(null, email, md5, User.Role.USER);
+      repository.addUser(user);
       return true;
     }
+  }
+
+  @Override
+  public List<User> findAll() {
+    return repository.findAll();
   }
 }

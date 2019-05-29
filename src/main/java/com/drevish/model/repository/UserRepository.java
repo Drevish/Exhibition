@@ -10,5 +10,7 @@ public interface UserRepository {
 
   Optional<User> findByEmail(String email);
 
-  void addUser(String email, String password, User.Role role);
+  Optional<User> findById(Long id);
+
+  void addUser(User user);
 }

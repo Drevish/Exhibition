@@ -14,16 +14,21 @@ import java.util.List;
 
 @WebServlet("")
 public class HomeServlet extends HttpServlet {
+  private static final String HOME_VIEW = "/WEB-INF/view/index.jsp";
 
-  private static final String HOME_JSP = "/WEB-INF/view/index.jsp";
+  private ShowroomService showroomService;
+
+  @Override
+  public void init() throws ServletException {
+    showroomService = (ShowroomService) getServletContext().getAttribute("showroomService");
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    ShowroomService service = (ShowroomService) getServletContext().getAttribute("showroomService");
-    List<Showroom> showrooms = service.findAll();
+    List<Showroom> showrooms = showroomService.findAll();
     req.setAttribute("showrooms", showrooms);
 
-    RequestDispatcher requestDispatcher = req.getRequestDispatcher(HOME_JSP);
+    RequestDispatcher requestDispatcher = req.getRequestDispatcher(HOME_VIEW);
     requestDispatcher.forward(req, resp);
   }
 

@@ -10,6 +10,14 @@ public class DBCPDataSource {
   private static BasicDataSource ds = new BasicDataSource();
 
   static {
+    try {
+      Class.forName("org.postgresql.Driver");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  static {
     ds.setUrl("jdbc:postgresql://localhost:5432/postgres");
     ds.setUsername("postgres");
     ds.setPassword("root");
@@ -19,9 +27,10 @@ public class DBCPDataSource {
     ds.setMaxWait(100);
   }
 
+  private DBCPDataSource() {
+  }
+
   public static Connection getConnection() throws SQLException {
     return ds.getConnection();
   }
-
-  private DBCPDataSource(){ }
 }

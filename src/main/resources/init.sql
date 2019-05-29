@@ -34,10 +34,10 @@ VALUES ('Things that move and live');
 
 CREATE TABLE exhibit
 (
-  id            SERIAL NOT NULL PRIMARY KEY,
-  name          TEXT   NOT NULL,
-  theme_id INT    NOT NULL,
-  showroom_id   INT    NOT NULL
+  id          SERIAL NOT NULL PRIMARY KEY,
+  name        TEXT   NOT NULL,
+  theme_id    INT    NOT NULL,
+  showroom_id INT    NOT NULL
 );
 INSERT INTO exhibit (name, theme_id, showroom_id)
 VALUES ('Cormopants', 1, 1);
@@ -105,3 +105,20 @@ INSERT INTO showroom (name)
 VALUES ('Domus');
 INSERT INTO showroom (name)
 VALUES ('Dieffebi');
+
+CREATE TABLE payment
+(
+  id      SERIAL NOT NULL PRIMARY KEY,
+  price   INT    NOT NULL,
+  name    TEXT   NOT NULL,
+  surname TEXT   NOT NULL
+);
+
+CREATE TABLE ticket
+(
+  id         SERIAL NOT NULL PRIMARY KEY,
+  user_id    INT    NOT NULL,
+  date       DATE   NOT NULL,
+  theme_id   INT    NOT NULL,
+  payment_id INT    NOT NULL
+);
