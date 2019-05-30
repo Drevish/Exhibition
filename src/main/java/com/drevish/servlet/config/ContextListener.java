@@ -1,4 +1,4 @@
-package com.drevish.servlet;
+package com.drevish.servlet.config;
 
 import com.drevish.model.repository.ExhibitRepository;
 import com.drevish.model.repository.ExhibitionThemeRepository;
@@ -13,10 +13,12 @@ import com.drevish.model.repository.impl.ShowroomRepositoryImpl;
 import com.drevish.model.repository.impl.TicketRepositoryImpl;
 import com.drevish.model.repository.impl.UserRepositoryImpl;
 import com.drevish.service.ExhibitionThemeService;
+import com.drevish.service.PaymentService;
 import com.drevish.service.ShowroomService;
 import com.drevish.service.TicketService;
 import com.drevish.service.UserService;
 import com.drevish.service.impl.ExhibitionThemeServiceImpl;
+import com.drevish.service.impl.PaymentServiceImpl;
 import com.drevish.service.impl.ShowroomServiceImpl;
 import com.drevish.service.impl.TicketServiceImpl;
 import com.drevish.service.impl.UserServiceImpl;
@@ -53,6 +55,9 @@ public class ContextListener implements ServletContextListener {
 
     TicketService ticketService = new TicketServiceImpl(ticketRepository);
     servletContext.setAttribute("ticketService", ticketService);
+
+    PaymentService paymentService = new PaymentServiceImpl(paymentRepository);
+    servletContext.setAttribute("paymentService", paymentService);
   }
 
   @Override

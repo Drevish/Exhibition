@@ -3,7 +3,6 @@ package com.drevish.servlet;
 import com.drevish.model.entity.Showroom;
 import com.drevish.service.ShowroomService;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +18,7 @@ public class HomeServlet extends HttpServlet {
   private ShowroomService showroomService;
 
   @Override
-  public void init() throws ServletException {
+  public void init() {
     showroomService = (ShowroomService) getServletContext().getAttribute("showroomService");
   }
 
@@ -27,13 +26,6 @@ public class HomeServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     List<Showroom> showrooms = showroomService.findAll();
     req.setAttribute("showrooms", showrooms);
-
-    RequestDispatcher requestDispatcher = req.getRequestDispatcher(HOME_VIEW);
-    requestDispatcher.forward(req, resp);
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    resp.sendRedirect("/");
+    req.getRequestDispatcher(HOME_VIEW).forward(req, resp);
   }
 }

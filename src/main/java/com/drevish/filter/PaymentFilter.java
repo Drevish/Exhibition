@@ -1,7 +1,5 @@
 package com.drevish.filter;
 
-import com.drevish.model.entity.User;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -14,10 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/buy", "/tickets"})
-public class AuthFilter implements Filter {
-  private static final String LOGIN_PAGE = "/login";
-
+@WebFilter("/buy/payment")
+public class PaymentFilter implements Filter {
   @Override
   public void init(FilterConfig filterConfig) {
 
@@ -30,16 +26,14 @@ public class AuthFilter implements Filter {
     HttpServletResponse resp = (HttpServletResponse) response;
     HttpSession session = req.getSession();
 
-    boolean userIsAuthorized = session != null &&
-            session.getAttribute("user") != null &&
-            !((User) session.getAttribute("user"))
-                    .getRole().equals(User.Role.UNKNOWN);
-    if (userIsAuthorized) {
+    boolean ticketIsInSession = session.getAttribute("ticket") != null;
+    if (ticketIsInSession) {
       chain.doFilter(request, response);
     } else {
-      resp.sendRedirect(LOGIN_PAGE);
+      resp.sendRedirect("/");
     }
   }
+
 
   @Override
   public void destroy() {

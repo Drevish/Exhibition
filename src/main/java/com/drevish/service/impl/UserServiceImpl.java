@@ -1,51 +1,66 @@
 package com.drevish.service.impl;
 
+import com.drevish.exception.LoginException;
+import com.drevish.exception.RegistrationException;
 import com.drevish.model.entity.User;
 import com.drevish.model.repository.UserRepository;
 import com.drevish.service.UserService;
+import com.drevish.validation.Validator;
+import com.drevish.validation.error.Errors;
+import lombok.AllArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
   private final UserRepository repository;
 
-  public UserServiceImpl(UserRepository repository) {
-    this.repository = repository;
-  }
-
   @Override
-  public Optional<User> login(String email, String password) {
+  public User login(String email, String password) {
     Optional<User> user = repository.findByEmail(email);
 
     if (!user.isPresent()) {
-      // email not found
-      return Optional.empty();
+      throw new LoginException("There are no user with specified email");
     }
 
-    String md5 = DigestUtils.md5Hex(password).toUpperCase();
-    if (!user.get().getPassword().equals(md5)) {
-      // wrong password
-      return Optional.empty();
+    boolean passwordsMatch = md5Sum(password).equals(user.get().getPassword());
+    if (!passwordsMatch) {
+      throw new LoginException("Password is wrong");
     }
 
-    return user;
+    return user.get();
+  }
+
+  private String md5Sum(String string) {
+    return DigestUtils.md5Hex(string).toUpperCase();
   }
 
   @Override
-  public boolean register(String email, String password) {
-    Optional<User> oldUser = repository.findByEmail(email);
-    if (oldUser.isPresent()) {
-      // email is not available
-      return false;
+  public Errors register(String email, String password) {
+    User user = new User(null, email, password, User.Role.USER);
+    return register(user);
+  }
+
+  private Errors register(User user) {
+    Optional<User> existingUser = repository.findByEmail(user.getEmail());
+    if (existingUser.isPresent()) {
+      throw new RegistrationException("User with specified email is already registered");
     } else {
-      // register
-      String md5 = DigestUtils.md5Hex(password).toUpperCase();
-      User user = new User(null, email, md5, User.Role.USER);
-      repository.addUser(user);
-      return true;
+      return validateAndRegister(user);
     }
+  }
+
+  private Errors validateAndRegister(User user) {
+    Errors errors = Validator.validate(user);
+    if (!errors.hasErrors()) {
+      String md5 = md5Sum(user.getPassword());
+      user.setPassword(md5);
+      repository.addUser(user);
+    }
+
+    return errors;
   }
 
   @Override

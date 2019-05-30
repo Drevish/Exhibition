@@ -5,24 +5,22 @@ import com.drevish.model.entity.ExhibitionTheme;
 import com.drevish.model.repository.DBCPDataSource;
 import com.drevish.model.repository.ExhibitRepository;
 import com.drevish.model.repository.ExhibitionThemeRepository;
+import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class ExhibitRepositoryImpl implements ExhibitRepository {
   private static final String FIND_BY_SHOWROOM_ID =
           "SELECT id, name, theme_id, showroom_id FROM exhibit WHERE showroom_id = ?";
   private final ExhibitionThemeRepository exhibitionThemeRepository;
 
-  public ExhibitRepositoryImpl(ExhibitionThemeRepository exhibitionThemeRepository) {
-    this.exhibitionThemeRepository = exhibitionThemeRepository;
-  }
 
   @Override
   public List<Exhibit> findAllByShowroomId(Long showroomId) {

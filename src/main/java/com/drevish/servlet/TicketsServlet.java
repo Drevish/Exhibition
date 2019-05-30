@@ -20,7 +20,7 @@ public class TicketsServlet extends HttpServlet {
   private TicketService ticketService;
 
   @Override
-  public void init() throws ServletException {
+  public void init() {
     ticketService = (TicketService) getServletContext().getAttribute("ticketService");
   }
 
@@ -29,7 +29,6 @@ public class TicketsServlet extends HttpServlet {
     User user = (User) req.getSession().getAttribute("user");
     List<Ticket> tickets = ticketService.findByUser(user);
     req.setAttribute("tickets", tickets);
-
     req.getRequestDispatcher(TICKETS_VIEW).forward(req, resp);
   }
 }

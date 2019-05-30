@@ -18,7 +18,7 @@ public class AdminServlet extends HttpServlet {
   private UserService userService;
 
   @Override
-  public void init() throws ServletException {
+  public void init() {
     userService = (UserService) getServletContext().getAttribute("userService");
   }
 

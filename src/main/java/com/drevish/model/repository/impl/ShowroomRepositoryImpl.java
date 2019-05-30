@@ -5,6 +5,7 @@ import com.drevish.model.entity.Showroom;
 import com.drevish.model.repository.DBCPDataSource;
 import com.drevish.model.repository.ExhibitRepository;
 import com.drevish.model.repository.ShowroomRepository;
+import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,14 +14,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 public class ShowroomRepositoryImpl implements ShowroomRepository {
   private static final String FIND_ALL_SQL = "SELECT id, name FROM showroom";
 
   private final ExhibitRepository exhibitRepository;
-
-  public ShowroomRepositoryImpl(ExhibitRepository exhibitRepository) {
-    this.exhibitRepository = exhibitRepository;
-  }
 
   @Override
   public List<Showroom> findAll() {

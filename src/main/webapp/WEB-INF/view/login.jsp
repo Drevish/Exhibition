@@ -6,6 +6,13 @@
   </head>
   <body>
   <h1>Log in Exhibition</h1>
+
+  <c:if test="${requestScope.exception != null}" >
+    <div class="validation-error">
+        ${requestScope.exception.message}
+    </div>
+  </c:if>
+
   <form method="post">
     <label for="email">Email:</label>
     <input type="email" name="email" id="email">

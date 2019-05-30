@@ -9,6 +9,7 @@ import com.drevish.model.repository.ExhibitionThemeRepository;
 import com.drevish.model.repository.PaymentRepository;
 import com.drevish.model.repository.TicketRepository;
 import com.drevish.model.repository.UserRepository;
+import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,8 +22,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class TicketRepositoryImpl implements TicketRepository {
-  public static final String SELECT_BY_USER_ID =
+  private static final String SELECT_BY_USER_ID =
           "SELECT id, user_id, date, theme_id, payment_id FROM ticket WHERE user_id = ?";
   private static final String INSERT_TICKET_SQL =
           "INSERT INTO ticket (user_id, date, theme_id, payment_id) VALUES (?, ?, ?, ?)";
@@ -30,12 +32,6 @@ public class TicketRepositoryImpl implements TicketRepository {
   private final PaymentRepository paymentRepository;
   private final UserRepository userRepository;
   private final ExhibitionThemeRepository exhibitionThemeRepository;
-
-  public TicketRepositoryImpl(PaymentRepository paymentRepository, UserRepository userRepository, ExhibitionThemeRepository exhibitionThemeRepository) {
-    this.paymentRepository = paymentRepository;
-    this.userRepository = userRepository;
-    this.exhibitionThemeRepository = exhibitionThemeRepository;
-  }
 
   @Override
   public void addTicket(Ticket ticket) {

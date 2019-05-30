@@ -14,10 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/buy", "/tickets"})
-public class AuthFilter implements Filter {
-  private static final String LOGIN_PAGE = "/login";
-
+@WebFilter("/admin")
+public class AdminFilter implements Filter {
   @Override
   public void init(FilterConfig filterConfig) {
 
@@ -30,14 +28,14 @@ public class AuthFilter implements Filter {
     HttpServletResponse resp = (HttpServletResponse) response;
     HttpSession session = req.getSession();
 
-    boolean userIsAuthorized = session != null &&
+    boolean userIsAdmin = session != null &&
             session.getAttribute("user") != null &&
-            !((User) session.getAttribute("user"))
-                    .getRole().equals(User.Role.UNKNOWN);
-    if (userIsAuthorized) {
+            ((User) session.getAttribute("user"))
+                    .getRole().equals(User.Role.ADMIN);
+    if (userIsAdmin) {
       chain.doFilter(request, response);
     } else {
-      resp.sendRedirect(LOGIN_PAGE);
+      resp.sendRedirect("/");
     }
   }
 

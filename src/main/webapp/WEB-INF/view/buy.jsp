@@ -8,8 +8,17 @@
 
 <h1>Fill the ticket info form:</h1>
 
+<c:if test="${requestScope.exception != null}" >
+    <div class="validation-error">
+            ${requestScope.exception.message}
+    </div>
+</c:if>
+
 <form method="post">
     <label for="date">Date:</label><br/>
+    <c:forEach var="error" items="${requestScope.errors.getErrors('date')}">
+        <div class="validation-error">${error.message}</div>
+    </c:forEach>
     <input type="date" name="date" id="date"><br/>
 
     <label for="theme">Exhibition theme</label><br/>
