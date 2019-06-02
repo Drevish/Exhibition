@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.Optional;
 
 public class PaymentRepositoryImpl implements PaymentRepository {
-  public static final String SELECT_BY_ID_SQL1 =
+  private static final String SELECT_BY_ID_SQL1 =
           "SELECT id, price, name, surname FROM payment WHERE id = ?";
   private static final String SELECT_BY_ID_SQL =
           "INSERT INTO payment (price, name, surname) VALUES (?, ?, ?)";

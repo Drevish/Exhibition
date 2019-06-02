@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ExhibitionThemeRepositoryImpl implements ExhibitionThemeRepository {
-  public static final String FIND_ALL_SQL = "SELECT id, name FROM exhibition_theme";
+  private static final String FIND_ALL_SQL = "SELECT id, name FROM exhibition_theme";
   private static final String SELECT_BY_ID_SQL = "SELECT id, name FROM exhibition_theme WHERE id = ?";
 
   @Override
