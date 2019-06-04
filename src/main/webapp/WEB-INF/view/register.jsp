@@ -10,6 +10,7 @@
 
     <%@include file="template/styles.jsp" %>
     <link rel="stylesheet" href="/static/css/center-form.css">
+    <link rel="stylesheet" href="/static/css/register.css">
 </head>
 <body>
 
@@ -41,12 +42,28 @@
 
 
             <div class="form-group">
-                <label for="password"><fmt:message key="general.password"/>:</label>
+                <label id="label-password">
+                    <span class="popup"><fmt:message key="register.password-info"/></span>
+                    <fmt:message key="general.password"/>: <span class="required">*</span>
+                </label>
                 <br/>
+
                 <c:forEach var="error" items="${requestScope.errors.getErrors('password')}">
                     <div class="validation-error">${error.message}</div>
                 </c:forEach>
                 <input class="form-control" type="password" name="password" id="password">
+                <br>
+            </div>
+
+
+            <div class="form-group">
+                <label>
+                    <fmt:message key="general.password-repeat"/>
+                </label>
+                <br/>
+
+                <div class="validation-error">${requestScope.password_repeat}</div>
+                <input class="form-control" type="password" name="password_repeat" id="password_repeat">
                 <br>
             </div>
 
@@ -55,5 +72,20 @@
     </div>
 </main>
 
+<script>
+    var password = document.getElementById("password")
+        , confirm_password = document.getElementById("password_repeat");
+
+    function validatePassword(){
+        if(password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("Passwords don't match");
+        } else {
+            confirm_password.setCustomValidity('');
+        }
+    }
+
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+</script>
 </body>
 </html>

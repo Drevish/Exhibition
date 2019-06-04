@@ -23,7 +23,9 @@ public class User {
   @NotNull(message = "Role can't be null")
   private Role role;
 
-  public static enum Role {
+  private Boolean active;
+
+  public enum Role {
     USER, ADMIN, UNKNOWN
   }
 }

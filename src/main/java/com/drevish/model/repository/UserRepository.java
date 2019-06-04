@@ -13,4 +13,10 @@ public interface UserRepository {
   Optional<User> findById(Long id);
 
   void addUser(User user);
+
+  void updateUser(User user);
+
+  List<User> fetch(int offset, int rowsCount);
+
+  int count();
 }

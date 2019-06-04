@@ -1,6 +1,7 @@
 package com.drevish.service.impl;
 
 import com.drevish.exception.LoginException;
+import com.drevish.exception.NoSuchUserException;
 import com.drevish.exception.RegistrationException;
 import com.drevish.model.entity.User;
 import com.drevish.model.repository.UserRepository;
@@ -15,6 +16,8 @@ import java.util.Optional;
 
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
+  private final static int ROWS_PER_PAGE = 10;
+
   private final UserRepository repository;
 
   @Override
@@ -39,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Errors register(String email, String password) {
-    User user = new User(null, email, password, User.Role.USER);
+    User user = new User(null, email, password, User.Role.USER, true);
     return register(user);
   }
 
@@ -66,5 +69,46 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<User> findAll() {
     return repository.findAll();
+  }
+
+  @Override
+  public User findById(Long id) throws NoSuchUserException {
+    Optional<User> user = repository.findById(id);
+    if (user.isPresent()) {
+      return user.get();
+    } else {
+      throw new NoSuchUserException("No user with specified id exists");
+    }
+  }
+
+  @Override
+  public void updateUser(Long userId, User.Role role, boolean active) {
+    User user = new User(userId, null, null, role, active);
+    repository.updateUser(user);
+  }
+
+  @Override
+  public List<User> findAllAtPage(int pageNumber) {
+    int maxPage = getMaxPageNumber();
+    if (pageNumber > maxPage) {
+      pageNumber = maxPage;
+    }
+    if (pageNumber < 1) {
+      pageNumber = 1;
+    }
+
+    int offset = (pageNumber - 1) * ROWS_PER_PAGE;
+    return repository.fetch(offset, ROWS_PER_PAGE);
+  }
+
+  @Override
+  public int getPagesCount() {
+    return getMaxPageNumber();
+  }
+
+  private int getMaxPageNumber() {
+    int rowsCount = repository.count();
+    double pages = (double) rowsCount / ROWS_PER_PAGE;
+    return (int) Math.ceil(pages);
   }
 }

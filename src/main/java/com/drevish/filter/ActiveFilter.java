@@ -14,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter("/admin/*")
-public class AdminFilter implements Filter {
+@WebFilter("/*")
+public class ActiveFilter implements Filter {
+  private static final String BAN_PAGE = "/ban";
+  private static final String LOGOUT_PAGE = "/logout";
+
   @Override
   public void init(FilterConfig filterConfig) {
 
@@ -28,14 +31,21 @@ public class AdminFilter implements Filter {
     HttpServletResponse resp = (HttpServletResponse) response;
     HttpSession session = req.getSession();
 
-    boolean userIsAdmin = session != null &&
-            session.getAttribute("user") != null &&
-            ((User) session.getAttribute("user"))
-                    .getRole().equals(User.Role.ADMIN);
-    if (userIsAdmin) {
+    String path = req.getRequestURI();
+    if (path.equals(BAN_PAGE) || path.equals(LOGOUT_PAGE)) {
       chain.doFilter(request, response);
+      return;
+    }
+
+    if (FilterUtils.userIsAuthorized(session)) {
+      User user = (User) session.getAttribute("user");
+      if (!user.getActive()) {
+        resp.sendRedirect(BAN_PAGE);
+      } else {
+        chain.doFilter(request, response);
+      }
     } else {
-      resp.sendRedirect("/");
+      chain.doFilter(request, response);
     }
   }
 

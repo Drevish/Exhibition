@@ -19,8 +19,8 @@ import static com.drevish.servlet.ServletUtils.setRequestErrorAttribute;
 @Slf4j
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
+  private static final String PASSWORD_REPEAT_FIELD_NAME = "password_repeat";
   private static final String REGISTER_VIEW = "/WEB-INF/view/register.jsp";
-
   private UserService userService;
 
   @Override
@@ -37,8 +37,13 @@ public class RegisterServlet extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String email = req.getParameter("email");
     String password = req.getParameter("password");
+    String passwordRepeat = req.getParameter(PASSWORD_REPEAT_FIELD_NAME);
 
-    Optional<ErrorAttribute> error = register(email, password);
+    Optional<ErrorAttribute> error = checkPasswordsMatch(password, passwordRepeat);
+    if (!error.isPresent()) {
+      error = register(email, password);
+    }
+
     if (error.isPresent()) {
       setRequestErrorAttribute(error.get(), req);
       doGet(req, resp);
@@ -46,6 +51,13 @@ public class RegisterServlet extends HttpServlet {
       log.info("A new user with email " + email + " has registered");
       resp.sendRedirect("/login");
     }
+  }
+
+  private Optional<ErrorAttribute> checkPasswordsMatch(String password, String passwordRepeat) {
+    if (password == null || !password.equals(passwordRepeat)) {
+      return Optional.of(new ErrorAttribute(PASSWORD_REPEAT_FIELD_NAME, "Passwords don't match!"));
+    }
+    return Optional.empty();
   }
 
   private Optional<ErrorAttribute> register(String email, String password) {
