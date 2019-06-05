@@ -52,7 +52,6 @@ public class ExhibitRepositoryImpl implements ExhibitRepository {
               rs.getString("name"),
               theme.get());
     } else {
-      //TODO: throw exception and log
       throw new SQLException("Exhibition theme not exists");
     }
   }

@@ -23,14 +23,11 @@
 
 
         <h2><fmt:message key="index.showrooms"/></h2>
+        <ul>
         <c:forEach var="showroom" items="${requestScope.showrooms}">
-            <h3>${showroom.name}</h3>
-            <ul>
-                <c:forEach var="exhibit" items="${showroom.exhibits}">
-                    <li>${exhibit.name} (${exhibit.theme.name})</li>
-                </c:forEach>
-            </ul>
+            <li><a href="/showroom/${showroom.name}">${showroom.name}</a></li>
         </c:forEach>
+        </ul>
 
     </div>
 </main>
