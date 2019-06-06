@@ -10,6 +10,7 @@ import com.drevish.model.repository.PaymentRepository;
 import com.drevish.model.repository.TicketRepository;
 import com.drevish.model.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,11 +18,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
+@Slf4j
 @AllArgsConstructor
 public class TicketRepositoryImpl implements TicketRepository {
   private static final String SELECT_BY_USER_ID =
@@ -35,38 +35,28 @@ public class TicketRepositoryImpl implements TicketRepository {
 
   @Override
   public void addTicket(Ticket ticket) {
-    Payment payment = paymentRepository.addPayment(ticket.getPayment());
-
     try (Connection conn = DBCPDataSource.getConnection()) {
+      Optional<Payment> payment = paymentRepository.addPayment(ticket.getPayment());
+      if (!payment.isPresent()) {
+        throw new SQLException("Can't add a payment " + ticket.getPayment());
+      }
+
       PreparedStatement stmt = conn.prepareStatement(INSERT_TICKET_SQL);
       stmt.setLong(1, ticket.getUser().getId());
       stmt.setObject(2, ticket.getDate());
       stmt.setLong(3, ticket.getTheme().getId());
-      stmt.setLong(4, payment.getId());
+      stmt.setLong(4, payment.get().getId());
 
       stmt.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      log.error(e.toString());
     }
   }
 
   @Override
   public List<Ticket> findByUserId(Long userId) {
-    List<Ticket> tickets = new ArrayList<>();
-
-    try (Connection conn = DBCPDataSource.getConnection()) {
-      PreparedStatement stmt = conn.prepareStatement(SELECT_BY_USER_ID);
-      stmt.setLong(1, userId);
-      ResultSet rs = stmt.executeQuery();
-
-      while (rs.next()) {
-        tickets.add(processResultSet(rs));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return tickets;
+    RepositoryHelper<Ticket> helper = new RepositoryHelper<>();
+    return helper.findAllById(SELECT_BY_USER_ID, userId, this::processResultSet, log);
   }
 
   private Ticket processResultSet(ResultSet rs) throws SQLException {

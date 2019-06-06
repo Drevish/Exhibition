@@ -6,16 +6,16 @@ import com.drevish.model.repository.DBCPDataSource;
 import com.drevish.model.repository.ExhibitRepository;
 import com.drevish.model.repository.ShowroomRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @AllArgsConstructor
 public class ShowroomRepositoryImpl implements ShowroomRepository {
   private static final String FIND_ALL_SQL = "SELECT id, name FROM showroom";
@@ -25,21 +25,8 @@ public class ShowroomRepositoryImpl implements ShowroomRepository {
 
   @Override
   public List<Showroom> findAll() {
-    List<Showroom> showrooms = new ArrayList<>();
-
-    try (Connection conn = DBCPDataSource.getConnection()) {
-      Statement stmt = conn.createStatement();
-      ResultSet rs = stmt.executeQuery(FIND_ALL_SQL);
-
-      while (rs.next()) {
-        showrooms.add(processResultSet(rs));
-      }
-
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    return showrooms;
+    RepositoryHelper<Showroom> helper = new RepositoryHelper<>();
+    return helper.findAll(FIND_ALL_SQL, this::processResultSet, log);
   }
 
   @Override
@@ -53,7 +40,7 @@ public class ShowroomRepositoryImpl implements ShowroomRepository {
         return Optional.of(processResultSet(rs));
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      log.error(e.toString());
     }
     return Optional.empty();
   }
