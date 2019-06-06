@@ -4,6 +4,7 @@ import com.drevish.model.entity.Exhibit;
 import com.drevish.model.entity.ExhibitionTheme;
 import com.drevish.model.repository.ExhibitRepository;
 import com.drevish.model.repository.ExhibitionThemeRepository;
+import com.drevish.util.SqlQueries;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,16 +16,12 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 public class ExhibitRepositoryImpl implements ExhibitRepository {
-  private static final String FIND_BY_SHOWROOM_ID =
-          "SELECT id, name, theme_id, showroom_id FROM exhibit WHERE showroom_id = ?";
-
   private final ExhibitionThemeRepository exhibitionThemeRepository;
-
 
   @Override
   public List<Exhibit> findAllByShowroomId(Long showroomId) {
     RepositoryHelper<Exhibit> helper = new RepositoryHelper<>();
-    return helper.findAllById(FIND_BY_SHOWROOM_ID, showroomId, this::processResultSet, log);
+    return helper.findAllById(SqlQueries.getValue("exhibit.FIND_BY_SHOWROOM_ID"), showroomId, this::processResultSet, log);
   }
 
 

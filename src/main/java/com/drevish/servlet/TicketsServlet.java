@@ -4,6 +4,7 @@ package com.drevish.servlet;
 import com.drevish.model.entity.Ticket;
 import com.drevish.model.entity.User;
 import com.drevish.service.TicketService;
+import com.drevish.util.Views;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,8 +16,6 @@ import java.util.List;
 
 @WebServlet("/tickets")
 public class TicketsServlet extends HttpServlet {
-  private static final String TICKETS_VIEW = "/WEB-INF/view/tickets.jsp";
-
   private TicketService ticketService;
 
   @Override
@@ -29,6 +28,6 @@ public class TicketsServlet extends HttpServlet {
     User user = (User) req.getSession().getAttribute("user");
     List<Ticket> tickets = ticketService.findByUser(user);
     req.setAttribute("tickets", tickets);
-    req.getRequestDispatcher(TICKETS_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.tickets")).forward(req, resp);
   }
 }

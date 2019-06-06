@@ -3,6 +3,7 @@ package com.drevish.model.repository.impl;
 import com.drevish.model.entity.Payment;
 import com.drevish.model.repository.DBCPDataSource;
 import com.drevish.model.repository.PaymentRepository;
+import com.drevish.util.SqlQueries;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -14,15 +15,10 @@ import java.util.Optional;
 
 @Slf4j
 public class PaymentRepositoryImpl implements PaymentRepository {
-  private static final String SELECT_BY_ID_SQL =
-          "SELECT id, price, name, surname FROM payment WHERE id = ?";
-  private static final String INSERT_PAYMENT_SQL =
-          "INSERT INTO payment (price, name, surname) VALUES (?, ?, ?)";
-
   @Override
   public Optional<Payment> addPayment(Payment payment) {
     try (Connection conn = DBCPDataSource.getConnection()) {
-      PreparedStatement stmt = conn.prepareStatement(INSERT_PAYMENT_SQL,
+      PreparedStatement stmt = conn.prepareStatement(SqlQueries.getValue("payment.INSERT_PAYMENT_SQL"),
               Statement.RETURN_GENERATED_KEYS);
       stmt.setLong(1, payment.getPrice());
       stmt.setString(2, payment.getName());
@@ -58,7 +54,8 @@ public class PaymentRepositoryImpl implements PaymentRepository {
   @Override
   public Optional<Payment> findById(Long id) {
     RepositoryHelper<Payment> helper = new RepositoryHelper<>();
-    return helper.findById(SELECT_BY_ID_SQL, id, this::mapResultSetToPayment, log);
+    return helper.findById(SqlQueries.getValue("payment.SELECT_BY_ID_SQL"),
+            id, this::mapResultSetToPayment, log);
   }
 
   private Payment mapResultSetToPayment(ResultSet rs) throws SQLException {

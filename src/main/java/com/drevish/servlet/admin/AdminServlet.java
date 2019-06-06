@@ -2,6 +2,7 @@ package com.drevish.servlet.admin;
 
 import com.drevish.model.entity.User;
 import com.drevish.service.UserService;
+import com.drevish.util.Views;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +15,6 @@ import java.util.Optional;
 
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet {
-  private static final String ADMIN_VIEW = "/WEB-INF/view/admin.jsp";
-
   private UserService userService;
 
   @Override
@@ -33,7 +32,7 @@ public class AdminServlet extends HttpServlet {
     req.setAttribute("users", users);
     req.setAttribute("page", page);
     req.setAttribute("pagesNumber", pagesNumber);
-    req.getRequestDispatcher(ADMIN_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.admin")).forward(req, resp);
   }
 
   private Optional<Integer> getPageNumber(HttpServletRequest req) {

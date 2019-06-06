@@ -5,6 +5,7 @@ import com.drevish.model.entity.Showroom;
 import com.drevish.model.repository.DBCPDataSource;
 import com.drevish.model.repository.ExhibitRepository;
 import com.drevish.model.repository.ShowroomRepository;
+import com.drevish.util.SqlQueries;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,21 +19,18 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 public class ShowroomRepositoryImpl implements ShowroomRepository {
-  private static final String FIND_ALL_SQL = "SELECT id, name FROM showroom";
-  private static final String SELECT_BY_NAME_SQL = "SELECT id, name FROM showroom WHERE name = ?";
-
   private final ExhibitRepository exhibitRepository;
 
   @Override
   public List<Showroom> findAll() {
     RepositoryHelper<Showroom> helper = new RepositoryHelper<>();
-    return helper.findAll(FIND_ALL_SQL, this::processResultSet, log);
+    return helper.findAll(SqlQueries.getValue("showroom.FIND_ALL_SQL"), this::processResultSet, log);
   }
 
   @Override
   public Optional<Showroom> findByName(String name) {
     try (Connection conn = DBCPDataSource.getConnection()) {
-      PreparedStatement stmt = conn.prepareStatement(SELECT_BY_NAME_SQL);
+      PreparedStatement stmt = conn.prepareStatement(SqlQueries.getValue("showroom.SELECT_BY_NAME_SQL"));
       stmt.setString(1, name);
       ResultSet rs = stmt.executeQuery();
 

@@ -1,5 +1,6 @@
 package com.drevish.servlet;
 
+import com.drevish.util.Views;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -16,8 +17,6 @@ import static javax.servlet.RequestDispatcher.ERROR_STATUS_CODE;
 @Slf4j
 @WebServlet("/errorHandler")
 public class ErrorHandlerServlet extends HttpServlet {
-  private static final String MAINTENANCE_VIEW = "/WEB-INF/view/maintenance.jsp";
-
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String errorMessage = "Exception has occured: " +
@@ -25,6 +24,6 @@ public class ErrorHandlerServlet extends HttpServlet {
             "Type: " + req.getAttribute(ERROR_EXCEPTION_TYPE) + ", " +
             "Message: " + req.getAttribute(ERROR_MESSAGE);
     log.info(errorMessage);
-    req.getRequestDispatcher(MAINTENANCE_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.maintenance")).forward(req, resp);
   }
 }

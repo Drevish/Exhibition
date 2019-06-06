@@ -7,6 +7,7 @@ import com.drevish.model.entity.User;
 import com.drevish.model.repository.DBCPDataSource;
 import com.drevish.model.repository.ExhibitionThemeRepository;
 import com.drevish.model.repository.PaymentRepository;
+import com.drevish.util.SqlQueries;
 import com.drevish.model.repository.TicketRepository;
 import com.drevish.model.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,11 +25,6 @@ import java.util.Optional;
 @Slf4j
 @AllArgsConstructor
 public class TicketRepositoryImpl implements TicketRepository {
-  private static final String SELECT_BY_USER_ID =
-          "SELECT id, user_id, date, theme_id, payment_id FROM ticket WHERE user_id = ?";
-  private static final String INSERT_TICKET_SQL =
-          "INSERT INTO ticket (user_id, date, theme_id, payment_id) VALUES (?, ?, ?, ?)";
-
   private final PaymentRepository paymentRepository;
   private final UserRepository userRepository;
   private final ExhibitionThemeRepository exhibitionThemeRepository;
@@ -41,7 +37,7 @@ public class TicketRepositoryImpl implements TicketRepository {
         throw new SQLException("Can't add a payment " + ticket.getPayment());
       }
 
-      PreparedStatement stmt = conn.prepareStatement(INSERT_TICKET_SQL);
+      PreparedStatement stmt = conn.prepareStatement(SqlQueries.getValue("ticket.INSERT_TICKET_SQL"));
       stmt.setLong(1, ticket.getUser().getId());
       stmt.setObject(2, ticket.getDate());
       stmt.setLong(3, ticket.getTheme().getId());
@@ -56,7 +52,8 @@ public class TicketRepositoryImpl implements TicketRepository {
   @Override
   public List<Ticket> findByUserId(Long userId) {
     RepositoryHelper<Ticket> helper = new RepositoryHelper<>();
-    return helper.findAllById(SELECT_BY_USER_ID, userId, this::processResultSet, log);
+    return helper.findAllById(SqlQueries.getValue("ticket.SELECT_BY_USER_ID"),
+            userId, this::processResultSet, log);
   }
 
   private Ticket processResultSet(ResultSet rs) throws SQLException {

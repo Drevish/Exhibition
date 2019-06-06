@@ -3,6 +3,7 @@ package com.drevish.servlet.auth;
 import com.drevish.exception.LoginException;
 import com.drevish.model.entity.User;
 import com.drevish.service.UserService;
+import com.drevish.util.Views;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -16,8 +17,6 @@ import java.io.IOException;
 @Slf4j
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-  private static final String LOGIN_VIEW = "/WEB-INF/view/login.jsp";
-
   private UserService userService;
 
   @Override
@@ -27,7 +26,7 @@ public class LoginServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.getRequestDispatcher(LOGIN_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.login")).forward(req, resp);
   }
 
   @Override

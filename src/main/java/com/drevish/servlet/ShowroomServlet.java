@@ -3,6 +3,7 @@ package com.drevish.servlet;
 import com.drevish.exception.NoSuchShowroomException;
 import com.drevish.model.entity.Showroom;
 import com.drevish.service.ShowroomService;
+import com.drevish.util.Views;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,8 +14,6 @@ import java.io.IOException;
 
 @WebServlet("/showroom/*")
 public class ShowroomServlet extends HttpServlet {
-  private static final String SHOWROOM_VIEW = "/WEB-INF/view/showroom.jsp";
-
   private ShowroomService showroomService;
 
   @Override
@@ -34,7 +33,7 @@ public class ShowroomServlet extends HttpServlet {
     try {
       Showroom showroom = showroomService.findByName(showroomName);
       req.setAttribute("showroom", showroom);
-      req.getRequestDispatcher(SHOWROOM_VIEW).forward(req, resp);
+      req.getRequestDispatcher(Views.getValue("view.showroom")).forward(req, resp);
     } catch (NoSuchShowroomException e) {
       resp.sendRedirect("/");
     }

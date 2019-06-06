@@ -3,6 +3,7 @@ package com.drevish.servlet.auth;
 import com.drevish.exception.RegistrationException;
 import com.drevish.service.UserService;
 import com.drevish.servlet.ErrorAttribute;
+import com.drevish.util.Views;
 import com.drevish.validation.error.Errors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +21,6 @@ import static com.drevish.servlet.ServletUtils.setRequestErrorAttribute;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
   private static final String PASSWORD_REPEAT_FIELD_NAME = "password_repeat";
-  private static final String REGISTER_VIEW = "/WEB-INF/view/register.jsp";
   private UserService userService;
 
   @Override
@@ -30,7 +30,7 @@ public class RegisterServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.getRequestDispatcher(REGISTER_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.register")).forward(req, resp);
   }
 
   @Override
