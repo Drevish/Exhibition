@@ -18,17 +18,17 @@
 
 <main>
     <div class="container">
-        <h1>Showroom "${requestScope.showroom.name}"</h1>
-        <div class="caption">Exhibits:</div>
+        <h1><fmt:message key="showroom.showroom"/> "${requestScope.showroom.name}"</h1>
+        <div class="caption"><fmt:message key="showroom.exhibits"/></div>
         <c:forEach var="exhibit" items="${requestScope.showroom.exhibits}">
             <div class="exhibit">
                 <div class="text"><b>${exhibit.name}</b></div>
-                <div class="text">Theme: ${exhibit.theme.name}</div>
+                <div class="text"><fmt:message key="showroom.Theme"/> ${exhibit.theme.name}</div>
                 <img src="/static/image/${exhibit.name.replaceAll(":", "")}.jpg" alt="${exhibit.name}" width="500">
             </div>
         </c:forEach>
 
-        <div class="link-back"><a href="/">Back to home</a></div>
+        <div class="link-back"><a href="/"><fmt:message key="general.back_to_home"/> </a></div>
     </div>
 </main>
 

@@ -21,12 +21,12 @@
         <div class="text"><fmt:message key="register.register"/></div>
         <c:if test="${requestScope.exception != null}">
             <div class="validation-error">
-                    ${requestScope.exception.message}
+                <fmt:message key="${requestScope.exception.message}"/>
             </div>
         </c:if>
 
         <c:if test="${requestScope.errors.hasErrors()}">
-            <div class="validation-error">Wrong data, please fill correctly</div>
+            <div class="validation-error"><fmt:message key="general.wrong_data"/></div>
         </c:if>
 
         <form method="post">
@@ -34,7 +34,7 @@
                 <label for="email"><fmt:message key="general.email"/>:</label>
                 <br/>
                 <c:forEach var="error" items="${requestScope.errors.getErrors('email')}">
-                    <div class="validation-error">${error.message}</div>
+                    <div class="validation-error"><fmt:message key="${error.message}"/></div>
                 </c:forEach>
                 <input class="form-control" type="email" name="email" id="email">
                 <br>
@@ -42,14 +42,14 @@
 
 
             <div class="form-group">
-                <label id="label-password">
+                <label id="label-password" for="password">
                     <span class="popup"><fmt:message key="register.password-info"/></span>
                     <fmt:message key="general.password"/>: <span class="required">*</span>
                 </label>
                 <br/>
 
                 <c:forEach var="error" items="${requestScope.errors.getErrors('password')}">
-                    <div class="validation-error">${error.message}</div>
+                    <div class="validation-error"><fmt:message key="${error.message}"/></div>
                 </c:forEach>
                 <input class="form-control" type="password" name="password" id="password">
                 <br>
@@ -57,7 +57,7 @@
 
 
             <div class="form-group">
-                <label>
+                <label for="password_repeat">
                     <fmt:message key="general.password-repeat"/>
                 </label>
                 <br/>
@@ -76,9 +76,9 @@
     var password = document.getElementById("password")
         , confirm_password = document.getElementById("password_repeat");
 
-    function validatePassword(){
-        if(password.value != confirm_password.value) {
-            confirm_password.setCustomValidity("Passwords don't match");
+    function validatePassword() {
+        if (password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("<fmt:message key="exception.passwords_match"/>");
         } else {
             confirm_password.setCustomValidity('');
         }

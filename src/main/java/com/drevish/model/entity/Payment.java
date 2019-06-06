@@ -11,16 +11,16 @@ import lombok.Data;
 public class Payment {
   private Long id;
 
-  @NotNull(message = "Price can't be null")
+  @NotNull(message = "error.payment.price.notnull")
   private Long price;
 
-  @NotNull(message = "Name can't be null")
-  @Size(min = 2, message = "Name is too short")
-    @Pattern(regexp = "^\\w*$", message = "Invalid name")
+  @NotNull(message = "error.payment.name.notnull")
+  @Size(min = 2, message = "error.payment.name.size")
+  @Pattern(regexp = "^\\w*$", message = "error.payment.name.pattern")
   private String name;
 
-  @NotNull(message = "Surname can't be null")
-  @Size(min = 2, message = "Surname is too short")
-  @Pattern(regexp = "^\\w*$", message = "Invalid surname")
+  @NotNull(message = "error.payment.surname.notnull")
+  @Size(min = 2, message = "error.payment.surname.size")
+  @Pattern(regexp = "^\\w*$", message = "error.payment.surname.pattern")
   private String surname;
 }

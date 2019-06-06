@@ -11,16 +11,16 @@ import lombok.Data;
 public class User {
   private Long id;
 
-  @NotNull(message = "Email can't be null")
-  @Pattern(regexp = "^[A-Za-z0-9.]+@[A-Za-z0-9.]+.[A-Za-z0-9.]+$", message = "Invalid email")
+  @NotNull(message = "error.user.email.notnull")
+  @Pattern(regexp = "^[A-Za-z0-9.]+@[A-Za-z0-9.]+.[A-Za-z0-9.]+$", message = "error.user.email.pattern")
   private String email;
 
-  @NotNull(message = "Password can't be null")
-  @Size(min = 6, max = 40, message = "Password should contain at least 6 and at most 40 symbols")
-  @Pattern(regexp = "^[A-Za-z0-9_]*$", message = "Password can contain only latin symbols, numbers and _")
+  @NotNull(message = "error.user.password.notnull")
+  @Size(min = 6, max = 40, message = "error.user.password.size")
+  @Pattern(regexp = "^[A-Za-z0-9_]*$", message = "error.user.password.pattern")
   private String password;
 
-  @NotNull(message = "Role can't be null")
+  @NotNull(message = "error.user.role.notnull")
   private Role role;
 
   private Boolean active;

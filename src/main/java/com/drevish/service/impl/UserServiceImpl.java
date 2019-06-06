@@ -25,12 +25,12 @@ public class UserServiceImpl implements UserService {
     Optional<User> user = repository.findByEmail(email);
 
     if (!user.isPresent()) {
-      throw new LoginException("There are no user with specified email");
+      throw new LoginException("exception.login.email");
     }
 
     boolean passwordsMatch = md5Sum(password).equals(user.get().getPassword());
     if (!passwordsMatch) {
-      throw new LoginException("Password is wrong");
+      throw new LoginException("exception.login.password");
     }
 
     return user.get();
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
   private Errors register(User user) {
     Optional<User> existingUser = repository.findByEmail(user.getEmail());
     if (existingUser.isPresent()) {
-      throw new RegistrationException("User with specified email is already registered");
+      throw new RegistrationException("exception.register.email");
     } else {
       return validateAndRegister(user);
     }
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     if (user.isPresent()) {
       return user.get();
     } else {
-      throw new NoSuchUserException("No user with specified id exists");
+      throw new NoSuchUserException("exception.finduser.id");
     }
   }
 

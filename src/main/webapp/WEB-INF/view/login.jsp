@@ -20,7 +20,7 @@
         <div class="text"><fmt:message key="login.login"/></div>
         <c:if test="${requestScope.exception != null}">
             <div class="validation-error">
-                    ${requestScope.exception.message}
+                <fmt:message key="${requestScope.exception.message}"/>
             </div>
         </c:if>
 
