@@ -21,7 +21,7 @@
 
         <c:if test="${requestScope.exception != null}">
             <div class="validation-error">
-                    ${requestScope.exception.message}
+                <fmt:message key="${requestScope.exception.message}"/>
             </div>
         </c:if>
 
@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label for="name"><fmt:message key="buy.payment.name"/>:</label><br/>
                 <c:forEach var="error" items="${requestScope.errors.getErrors('name')}">
-                    <div class="validation-error">${error.message}</div>
+                    <div class="validation-error"><fmt:message key="${error.message}"/></div>
                 </c:forEach>
                 <input class="form-control" type="text" name="name" id="name">
                 <br/>
@@ -40,7 +40,7 @@
             <div class="form-group">
                 <label for="surname"><fmt:message key="buy.payment.surname"/>:</label><br/>
                 <c:forEach var="error" items="${requestScope.errors.getErrors('surname')}">
-                    <div class="validation-error">${error.message}</div>
+                    <div class="validation-error"><fmt:message key="${error.message}"/></div>
                 </c:forEach>
                 <input class="form-control" type="text" name="surname" id="surname">
                 <br/>
@@ -50,7 +50,7 @@
             <div class="form-group">
                 <label for="price"><fmt:message key="buy.payment.price"/>: </label><br/>
                 <c:forEach var="error" items="${requestScope.errors.getErrors('price')}">
-                    <div class="validation-error">${error.message}</div>
+                    <div class="validation-error"><fmt:message key="${error.message}"/></div>
                 </c:forEach>
                 <input class="form-control" type="number" min="${requestScope.minPrice}" name="price" id="price">
                 <br/>

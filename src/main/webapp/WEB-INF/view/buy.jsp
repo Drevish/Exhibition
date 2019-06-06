@@ -20,7 +20,7 @@
 
         <c:if test="${requestScope.exception != null}">
             <div class="validation-error">
-                    ${requestScope.exception.message}
+                <fmt:message key="${requestScope.exception.message}"/>
             </div>
         </c:if>
 
@@ -29,7 +29,7 @@
             <div class="form-group">
                 <label for="date"><fmt:message key="buy.date"/>:</label><br/>
                 <c:forEach var="error" items="${requestScope.errors.getErrors('date')}">
-                    <div class="validation-error">${error.message}</div>
+                    <div class="validation-error"><fmt:message key="${error.message}"/></div>
                 </c:forEach>
                 <input class="form-control" type="date" name="date" id="date"><br/>
             </div>

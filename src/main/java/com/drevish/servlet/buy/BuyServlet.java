@@ -5,6 +5,7 @@ import com.drevish.model.entity.Ticket;
 import com.drevish.model.entity.User;
 import com.drevish.service.ExhibitionThemeService;
 import com.drevish.service.TicketService;
+import com.drevish.util.Views;
 import com.drevish.validation.error.Errors;
 
 import javax.servlet.ServletException;
@@ -21,7 +22,6 @@ import java.util.Optional;
 @WebServlet("/buy")
 public class BuyServlet extends HttpServlet {
   private static final String PAYMENT_URL = "/buy/payment";
-  private static final String BUY_VIEW = "/WEB-INF/view/buy.jsp";
 
   private ExhibitionThemeService exhibitionThemeService;
   private TicketService ticketService;
@@ -36,7 +36,7 @@ public class BuyServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setAttribute("themes", exhibitionThemeService.findAll());
-    req.getRequestDispatcher(BUY_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.buy")).forward(req, resp);
   }
 
   @Override

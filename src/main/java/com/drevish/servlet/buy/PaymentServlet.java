@@ -3,6 +3,7 @@ package com.drevish.servlet.buy;
 import com.drevish.model.entity.Payment;
 import com.drevish.model.entity.Ticket;
 import com.drevish.service.PaymentService;
+import com.drevish.util.Views;
 import com.drevish.validation.error.Errors;
 
 import javax.servlet.ServletException;
@@ -16,7 +17,6 @@ import java.util.Optional;
 
 @WebServlet("/buy/payment")
 public class PaymentServlet extends HttpServlet {
-  private static final String PAYMENT_VIEW = "/WEB-INF/view/payment.jsp";
   private static final int MINIMUM_TICKET_PRICE = 10;
   private static final String PAYMENT_SUCCESS_URL = "/buy/payment/success";
 
@@ -30,7 +30,7 @@ public class PaymentServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setAttribute("minPrice", MINIMUM_TICKET_PRICE);
-    req.getRequestDispatcher(PAYMENT_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.payment")).forward(req, resp);
   }
 
   @Override

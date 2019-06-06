@@ -24,7 +24,7 @@ public class ShowroomServiceImpl implements ShowroomService {
     if (showroom.isPresent()) {
       return showroom.get();
     } else {
-      throw new NoSuchShowroomException("No showroom with such name exists");
+      throw new NoSuchShowroomException("exception.showroom.name");
     }
   }
 }

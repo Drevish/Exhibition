@@ -3,6 +3,7 @@ package com.drevish.servlet.admin;
 import com.drevish.exception.NoSuchUserException;
 import com.drevish.model.entity.User;
 import com.drevish.service.UserService;
+import com.drevish.util.Views;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -15,8 +16,6 @@ import java.io.IOException;
 @Slf4j
 @WebServlet("/admin/*")
 public class UserServlet extends HttpServlet {
-  private static final String USER_VIEW = "/WEB-INF/view/admin_user.jsp";
-
   private UserService userService;
 
   @Override
@@ -35,7 +34,7 @@ public class UserServlet extends HttpServlet {
       log.info(exception.getMessage());
       req.setAttribute("exception", exception);
     }
-    req.getRequestDispatcher(USER_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.user")).forward(req, resp);
   }
 
   @Override

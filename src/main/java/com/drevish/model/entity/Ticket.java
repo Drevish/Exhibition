@@ -13,11 +13,11 @@ public class Ticket {
   private Long id;
   private User user;
 
-  @NotNull(message = "You should specify the exhibition date")
-  @Date(minDateIsToday = true, message = "You can't order a ticket for the past")
+  @NotNull(message = "error.ticket.date.notnull")
+  @Date(minDateIsToday = true, message = "error.ticket.date.date")
   private LocalDate date;
 
-  @NotNull(message = "There are no such exhibition theme")
+  @NotNull(message = "error.ticket.theme.notnull")
   private ExhibitionTheme theme;
 
   private Payment payment;

@@ -3,6 +3,8 @@ package com.drevish.model.repository.impl;
 import com.drevish.model.entity.Payment;
 import com.drevish.model.repository.DBCPDataSource;
 import com.drevish.model.repository.PaymentRepository;
+import com.drevish.util.SqlQueries;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,16 +13,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
+@Slf4j
 public class PaymentRepositoryImpl implements PaymentRepository {
-  private static final String SELECT_BY_ID_SQL1 =
-          "SELECT id, price, name, surname FROM payment WHERE id = ?";
-  private static final String SELECT_BY_ID_SQL =
-          "INSERT INTO payment (price, name, surname) VALUES (?, ?, ?)";
-
   @Override
-  public Payment addPayment(Payment payment) {
+  public Optional<Payment> addPayment(Payment payment) {
     try (Connection conn = DBCPDataSource.getConnection()) {
-      PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL,
+      PreparedStatement stmt = conn.prepareStatement(SqlQueries.getValue("payment.INSERT_PAYMENT_SQL"),
               Statement.RETURN_GENERATED_KEYS);
       stmt.setLong(1, payment.getPrice());
       stmt.setString(2, payment.getName());
@@ -29,39 +27,35 @@ public class PaymentRepositoryImpl implements PaymentRepository {
       int affectedRows = stmt.executeUpdate();
 
       if (affectedRows != 0) {
-        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-          if (generatedKeys.next()) {
-            return new Payment(generatedKeys.getLong(1),
-                    payment.getPrice(),
-                    payment.getName(),
-                    payment.getSurname());
-          } else {
-            throw new SQLException("Creating failed, no ID obtained.");
-          }
-        }
+        return getGeneratedPayment(stmt, payment);
       } else {
         throw new SQLException("Creating failed, no rows affected.");
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      return null;
+      log.error(e.toString());
+      return Optional.empty();
+    }
+  }
+
+  private Optional<Payment> getGeneratedPayment(PreparedStatement stmt, Payment payment)
+          throws SQLException {
+    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+      if (generatedKeys.next()) {
+        return Optional.of(new Payment(generatedKeys.getLong(1),
+                payment.getPrice(),
+                payment.getName(),
+                payment.getSurname()));
+      } else {
+        throw new SQLException("Creating failed, no ID obtained.");
+      }
     }
   }
 
   @Override
   public Optional<Payment> findById(Long id) {
-    try (Connection conn = DBCPDataSource.getConnection()) {
-      PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL1);
-      stmt.setLong(1, id);
-      ResultSet rs = stmt.executeQuery();
-
-      if (rs.next()) {
-        return Optional.of(mapResultSetToPayment(rs));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return Optional.empty();
+    RepositoryHelper<Payment> helper = new RepositoryHelper<>();
+    return helper.findById(SqlQueries.getValue("payment.SELECT_BY_ID_SQL"),
+            id, this::mapResultSetToPayment, log);
   }
 
   private Payment mapResultSetToPayment(ResultSet rs) throws SQLException {

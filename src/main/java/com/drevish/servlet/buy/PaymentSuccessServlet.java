@@ -2,6 +2,7 @@ package com.drevish.servlet.buy;
 
 import com.drevish.model.entity.Ticket;
 import com.drevish.service.TicketService;
+import com.drevish.util.Views;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +27,7 @@ public class PaymentSuccessServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     Ticket ticket = removeFromSession(req.getSession());
     req.setAttribute("ticket", ticket);
-    req.getRequestDispatcher(PAYMENT_SUCCESS_VIEW).forward(req, resp);
+    req.getRequestDispatcher(Views.getValue("view.payment_success")).forward(req, resp);
   }
 
   private Ticket removeFromSession(HttpSession session) {

@@ -14,8 +14,8 @@
 <main>
     <div class="container">
         <div class="m-5">
-            <div>Your account has been banned.</div>
-            <a href="/logout" class="btn btn-danger m-2">Log out</a>
+            <div><fmt:message key="ban.banned"/></div>
+            <a href="/logout" class="btn btn-danger m-2"><fmt:message key="header.log_out"/> </a>
         </div>
     </div>
 </main>
